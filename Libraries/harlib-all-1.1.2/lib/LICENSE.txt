@@ -1,0 +1,19 @@
+File: derby.jar
+Bundle-Vendor: Apache Software Foundation
+Bundle-Name: Apache Derby 10.7
+Bundle-Version: 10.7.1000001.1040133
+License: Apache License, Version 2.0
+
+File:jackson-core-asl-1.7.2.jar
+Specification-Vendor: http://www.ietf.org/rfc/rfc4627.txt
+Bundle-Name: Jackson JSON processor
+Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
+Bundle-Vendor: http://fasterxml.com
+Bundle-Version: 1.7.2
+Specification-Title: JSON - JavaScript Object Notation
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-SymbolicName: jackson-core-asl
+
+File:junit.jar
+Software: JUnit 3.8.2
+License: Common Public License - v 1.0

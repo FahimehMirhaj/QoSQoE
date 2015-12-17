@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+
+<!-- In order to build netExport extension run: $ant build
+    The final xpi file should be located in release directory -->
+<project name="HarLib" basedir="." default="compile">
+
+  <!-- Directories -->
+  <property name="build.dir" value="build" />
+  <property name="src.dir" value="src" />
+  <property name="release.dir" value="release" />
+
+  <!-- Properties -->
+  <property file="build.properties" />
+
+  <!-- Classpath definitions -->
+  <path id="classpath.base">
+    <pathelement location="lib/jackson-core-asl-1.8.5.jar" />
+  </path>
+  <path id="classpath.test">
+    <path refid="classpath.base" />
+    <pathelement location="lib/junit.jar" />
+  </path>
+  <path id="classpath.runtest">
+    <path refid="classpath.test" />
+    <pathelement location="${build.dir}" />
+  </path>
+
+  <!-- Init -->
+  <target name="init">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${release.dir}" />
+  </target>
+
+  <!-- Clean -->
+  <target name="clean">
+    <delete dir="${build.dir}" />
+    <delete dir="${release.dir}" />
+  </target>
+
+  <!-- Compile -->
+  <target name="compile"
+          depends="compile-lib,compile-tests"
+          description="Compile the HAR library and the test suite" />
+
+  <!-- Compile the library -->
+  <target name="compile-lib"
+          depends="init"
+          description="Compile the HAR library">
+    <!-- Compile the lib and tools but not the tests -->
+    <javac srcdir="${src.dir}"
+           destdir="${build.dir}"
+           excludes="edu/umass/cs/benchlab/har/test/**"
+           debug="on"
+           source="1.6"
+           target="1.6">
+      <classpath refid="classpath.base" />
+    </javac>
+  </target>
+
+  <!-- Compile the tests -->
+  <target name="compile-tests"
+          depends="init"
+          description="Compiles the test suite">
+    <javac srcdir="${src.dir}"
+           destdir="${build.dir}"
+           includes="edu/umass/cs/benchlab/har/test/**"
+           debug="on"
+           source="1.6"
+           target="1.6">
+      <classpath refid="classpath.test" />
+    </javac>
+  </target>
+
+  <!-- Run the tests -->
+  <target name="run-tests"
+          depends="compile-tests"
+          description="Run the HAR library test suite">
+    <junit printsummary="yes" haltonfailure="no">
+      <classpath refid="classpath.runtest" />
+      <formatter type="plain" usefile="yes" />
+      <test name="edu.umass.cs.benchlab.har.test.AllTests" />
+    </junit>
+  </target>
+
+  <!-- Documentation -->
+  <target name="doc" depends="compile" description="Builds the Javadoc">
+    <javadoc packagenames="edu.*"
+             sourcepath="${src.dir}"
+             excludepackagenames="edu.umass.cs.benchlab.har.test.*"
+             destdir="${build.dir}/docs/api"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="HTTP Archive library API (specification ${SPEC_VERSION})">
+      <doctitle>
+        <![CDATA[<h1>HTTP Archive library API (specification ${SPEC_VERSION})</h1>]]>
+      </doctitle>
+    <bottom>
+      <![CDATA[<i>Copyright &#169; 2011 Emmanuel Cecchet - University of Massachusetts - All Rights Reserved.</i>]]>
+    </bottom>
+  <classpath refid="classpath.base" />
+</javadoc>
+</target>
+
+<!-- Release -->
+<target name="release"
+        depends="clean,compile,doc"
+        description="Builds Jar releases of the HAR library">
+<jar destfile="${release.dir}/harlib-${VERSION}${RELEASE}.jar">
+  <fileset dir="${build.dir}/" excludes="edu/umass/cs/benchlab/har/test/**" />
+  <manifest>
+    <attribute name="Built-By" value="Emmanuel Cecchet" />
+    <!-- Information about the program itself -->
+    <attribute name="Implementation-Vendor"
+               value="University of Massachusetts" />
+    <attribute name="Implementation-Title" value="HAR library" />
+    <attribute name="Implementation-Version" value="${VERSION}${RELEASE}" />
+  </manifest>
+</jar>
+<jar destfile="${release.dir}/harlib-src-${VERSION}${RELEASE}.jar">
+  <fileset dir="${build.dir}/" excludes="edu/umass/cs/benchlab/har/test/**" />
+  <fileset dir="${src.dir}/" excludes="edu/umass/cs/benchlab/har/test/**" />
+  <manifest>
+    <attribute name="Built-By" value="Emmanuel Cecchet" />
+    <!-- Information about the program itself -->
+    <attribute name="Implementation-Vendor"
+               value="University of Massachusetts" />
+    <attribute name="Implementation-Title" value="HAR library" />
+    <attribute name="Implementation-Version" value="${VERSION}${RELEASE}" />
+  </manifest>
+</jar>
+<jar destfile="${release.dir}/harlib-nodoc-${VERSION}${RELEASE}.jar">
+  <fileset dir="${build.dir}/">
+    <exclude name="edu/umass/cs/benchlab/har/test/**" />
+    <exclude name="docs/**" />
+  </fileset>
+  <manifest>
+    <attribute name="Built-By" value="Emmanuel Cecchet" />
+    <!-- Information about the program itself -->
+    <attribute name="Implementation-Vendor"
+               value="University of Massachusetts" />
+    <attribute name="Implementation-Title" value="HAR library" />
+    <attribute name="Implementation-Version" value="${VERSION}${RELEASE}" />
+  </manifest>
+</jar>
+<jar destfile="${release.dir}/harlib-jackson-${VERSION}${RELEASE}.jar">
+  <fileset dir="${build.dir}/" excludes="edu/umass/cs/benchlab/har/test/**" />
+  <zipfileset includes="**/*.class" src="lib/jackson-core-asl-1.8.5.jar" />
+  <manifest>
+    <attribute name="Built-By" value="Emmanuel Cecchet" />
+    <!-- Information about the program itself -->
+    <attribute name="Implementation-Vendor"
+               value="University of Massachusetts" />
+    <attribute name="Implementation-Title"
+               value="HAR library with Jackson parser" />
+    <attribute name="Implementation-Version" value="${VERSION}${RELEASE}" />
+    <!-- details -->
+    <section name="Jackson core library">
+      <attribute name="Version" value="1.7.2" />
+      <attribute name="License" value="ASL" />
+    </section>
+  </manifest>
+</jar>
+<zip destfile="${release.dir}/harlib-all-${VERSION}${RELEASE}.zip">
+  <fileset dir="." />
+</zip>
+
+</target>
+
+</project>

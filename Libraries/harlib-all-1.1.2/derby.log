@@ -1,0 +1,8 @@
+----------------------------------------------------------------
+Sat Jan 19 09:07:58 EST 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.7.1.1 - (1040133): instance a816c00e-013c-5323-282b-00000d10fe60 
+on database directory C:\Users\frog\Documents\workspace\HarLib\harlibtest  with class loader sun.misc.Launcher$AppClassLoader@2b8f73cb 
+Loaded from file:/C:/Users/frog/Documents/workspace/HarLib/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_01-b08
+Database Class Loader started - derby.database.classpath=''
